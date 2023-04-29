@@ -3,8 +3,7 @@ import pickle  # used to send over the list of users
 import threading
 
 # Allow connections from outside of the server
-HOST = "localhost"
-# HOST = ''
+HOST = '' # Obtains the IP of the server
 PORT = 9898
 
 # Create empty set so that it can maintain a list of the connected clients
@@ -15,8 +14,6 @@ clients_lock = threading.Lock()
 users = []
 
 # Handling new client connections
-
-
 def add_client(client, addr):
     # Get Clients username and show that they have been connected
     username = client.recv(1024).decode("utf-8")
@@ -40,8 +37,7 @@ def add_client(client, addr):
                 active_connection = False
                 users.remove(username)
                 list_active_users = pickle.dumps(users)
-                print(
-                    f"*** <{username}> (IP: {addr[0]} | Remote addr: {addr[1]}) Disconnected ***")
+                print(f"*** <{username}> (IP: {addr[0]} | Remote addr: {addr[1]}) Disconnected ***")
 
             # Get all of the active users that are currently connected to the server
             elif msg == "!GetAllActiveUsers":
