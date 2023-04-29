@@ -19,11 +19,11 @@ def receive_message(client):
     try: 
         receiving = True
         while receiving:
-            message = client.recv(1024)
+            message = client.recv(1024) # Received message is limited to only 1024 bytes
             try:
                 message = message.decode('utf-8')
             except UnicodeDecodeError:
-                message = pickle.loads(message)
+                message = pickle.loads(message) # This is the data that consists of all of the active users
 
             # Checks if the message is a list and inserts into the Users text box
             if type(message) == list and message:
@@ -36,15 +36,17 @@ def receive_message(client):
             # Checks for anything other than !Exit
             if type(message) != str:
                 pass
-            elif message != "!Exit":
+            elif message != "!Exit": 
+                # Show the message in the chat box
                 Chat_text.config(state=NORMAL)
                 Chat_text.insert(INSERT, f'{message}\n')
                 Chat_text.config(state=DISABLED)
             else:
                 receiving = False
 
-    except RuntimeError:
-        print("Exiting Thread")
+    except:
+        print("Receiving Exiting Thread")
+        client.close()
 
 
 def Send_button_clicked_Chat():
@@ -204,7 +206,7 @@ except KeyboardInterrupt:
     Disconnect_button_clicked_Chat()
     raise SystemExit
 except:
-    print("Error in Chat Window Program")
+    print("Closing Program")
     raise SystemExit
 
 thread.join()
