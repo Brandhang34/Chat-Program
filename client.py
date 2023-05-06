@@ -40,6 +40,7 @@ def receive_message(client):
                 # Show the message in the chat box
                 Chat_text.config(state=NORMAL)
                 Chat_text.insert(INSERT, f'{message}\n')
+                Chat_text.see(END)
                 Chat_text.config(state=DISABLED)
             else:
                 receiving = False
@@ -49,6 +50,7 @@ def receive_message(client):
         client.close()
 
 
+# When the button or 'return' is pressed, send the message
 def Send_button_clicked_Chat():
     message = Chat_input.get()
     Chat_text.config(state=NORMAL)
@@ -57,20 +59,21 @@ def Send_button_clicked_Chat():
     Chat_input.delete(0, 'end')
 
 
+# When the button or 'return' is pressed, send the username, host, and port
 def Send_button_clicked_Username():
     username.set(Username_entry.get())
     Host.set(Host_entry.get())
     Port.set(Port_entry.get())
     UsernameInput_window.destroy()
 
-
+# When the Disconnect button is clicked, exit the program
 def Disconnect_button_clicked_Chat():
     ChatProgram_window.destroy()
     send_message(client, "!Exit")
     print("*** Disconnected ***")
     raise SystemExit
 
-
+# When the exit button is cliecked, exit the program
 def Disconnect_button_clicked_Username():
     UsernameInput_window.destroy()
     raise SystemExit
@@ -85,11 +88,13 @@ def Disconnect_button_clicked_Username():
 ********************************* Username Input *********************************
 '''
 try:
+    #Create the tkinter object
     UsernameInput_window = Tk()
     UsernameInput_window.eval('tk::PlaceWindow . center')
     UsernameInput_window.title("Enter Username")
     UsernameInput_window.config(padx=30, pady=10)
 
+    #Labels
     Username_label = Label(text="Username: ", font=("Arial", 14, "bold"))
     Username_label.grid(column=1, row=0, pady=(30,5), sticky="W")
 
@@ -99,10 +104,12 @@ try:
     Host_label = Label(text="Host IP & Port: ", font=("Arial", 14, "bold"))
     Host_label.grid(column=1, row=2, pady=(30,5),columnspan=2, sticky="W")
 
+    # Setting the input values into variables.
     username = StringVar()
     Host = StringVar()
     Port = StringVar()
 
+    #Entries
     Username_entry = Entry(width = 30)
     Username_entry.grid(column=1, row=1, columnspan=2, ipady=5, sticky="W")
     Username_entry.focus()
@@ -115,6 +122,7 @@ try:
     Port_entry.grid(column=2, row=3, columnspan=1, ipady=5, sticky="E")
     Port_entry.insert(0,"9898")
 
+    #Buttons
     Send_button = Button(text="Connect", command=lambda: Send_button_clicked_Username(), width=8)
     UsernameInput_window.bind('<Return>', lambda event: Send_button_clicked_Username())
     Send_button.grid(column=1, row=4, columnspan=2, pady=25)   
@@ -137,9 +145,11 @@ except:
 '''
 
 try:
+    # Get server IP and port
     HOST = Host.get()
     PORT = int(Port.get())
 
+    # Connect to the server and create a thread for receiving messages
     client = connect(username.get(), HOST, PORT)
     thread = threading.Thread(target=receive_message, args=(client,))
     thread.start()
@@ -149,13 +159,13 @@ except ConnectionRefusedError:
 
 
 try:
+    # Create TKinter Object
     ChatProgram_window = Tk()
     ChatProgram_window.eval('tk::PlaceWindow . center')
     ChatProgram_window.title("Chatting Program")
     ChatProgram_window.config(padx=40, pady=10)
 
-    # Label
-
+    # Labels
     ChatBox_label = Label(text=f"(My IP: {client.getsockname()[0]} Port: {client.getsockname()[1]})\n\nChat Box", font=("Arial", 18, "bold"),justify=LEFT)
     ChatBox_label.grid(column=1, row=0, pady = 10, sticky="W")
 
@@ -166,31 +176,29 @@ try:
     ConnectedUsers_label.grid(column=3, row=1, pady=5)
 
     # Text Box
-
     Chat_text = Text(ChatProgram_window, font=("Arial", 12, "bold"), width=60)
     Chat_text.grid(column=1, row=1,  columnspan=2, rowspan=2)
     send_message(client, "!ShowUserHasConnected")
     Chat_text.config(state=DISABLED)
 
-    Chat_Scroll=Scrollbar(ChatProgram_window, orient='vertical')
-    Chat_Scroll.grid(column=2, row=1, sticky="nse", rowspan=2)
-    Chat_Scroll.config(command=Chat_text.yview)
-    Chat_text.configure(yscrollcommand=Chat_Scroll.set)
-
     ActiveUser_text = Text(ChatProgram_window, font=("Arial", 12, "bold"), width=15, height=22)
     ActiveUser_text.grid(column=3, row=2, padx=15,sticky="S")
 
+    # Scrollbar for message text box
+    Chat_Scroll=Scrollbar(ChatProgram_window, orient='vertical')
+    Chat_Scroll.grid(column=2, row=1, sticky="nse", rowspan=2)
+    Chat_Scroll.config(command=Chat_text.yview)
+
+    Chat_text.configure(yscrollcommand=Chat_Scroll.set)
     send_message(client, "!GetAllActiveUsers") # Get a list of all active users connected to the server
     ActiveUser_text.config(state=DISABLED)
 
-    # Entry
-
+    # Entries
     Chat_input = Entry(width = 83)
     Chat_input.grid(column=1, row=4, columnspan=2, ipady=5, sticky="W")
     Chat_input.focus()
 
-    #Button
-
+    #Buttons
     Send_button = Button(text="Send", command=lambda: Send_button_clicked_Chat(), width=15)
     ChatProgram_window.bind('<Return>', lambda event: Send_button_clicked_Chat())
     Send_button.grid(column=3, row=4)
