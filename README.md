@@ -15,7 +15,7 @@ python3 server.py
 In order to connect, the user will provide a local IP address and a port number of the server. When the user/users are connected, they will be able to send messages by having the server receive the messages and rebroadcast them to the other connected clients. When a user wants to disconnect, they will send a message to the server indicating that they are going to exit the program and closes the socket connection. When the server is done accepting connections, it will close the socket.
 
 <p align="center">
-  <img src="README_Resources/TCPConnectionsProcedure.png" />
+  <img src="README_Resources/TCPConenctionsProcedure.png" />
 </p>
 
 By Default, the server side script will open the socket connection numbered 9898. This can be changed in the script if you would like to use a different number.
