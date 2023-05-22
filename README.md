@@ -75,7 +75,7 @@ hostname -I
 
 This only used for internal network uses only. If you use Wireshark or any packet capture application, it will be able to detect what messages are being sent. So deploying this onto a server located outside the network may work, but it poses as a huge security risk.
 
-Here is a more <a href=README_Resources/ChatProgramReport>detailed report</a> on the project.
+Here is a more [detailed report](README_Resources/ChatProgramReport.pdf) on the project.
 
 ## Source/References
 
